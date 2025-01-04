@@ -1,0 +1,100 @@
+custom.employee.form:
+  path: '/get-employee-details'
+  defaults:
+    _form: '\Drupal\ballistic_employee\Form\EmployeeDetails'
+    _title: 'Employee Details Form'
+  requirements:
+    _permission: 'access content'
+
+employee.getEmployeeList:
+  path: '/employee-list'
+  defaults:
+    _controller: '\Drupal\ballistic_employee\Controller\EmployeeController::getEmployeeList'
+    _title: 'Employee List'
+  requirements:
+    _permission: 'access content'
+
+# employee.delete:
+#   path: '/employee/{id}/delete'
+#   defaults:
+#     _form: '\Drupal\ballistic_employee\Form\ConfirmDeleteForm'
+#     _title: 'Confirm Deletion'
+#   requirements:
+#     _permission: 'administer site configuration'
+#     id: ^\d+$
+
+# ballistic_employee.cancelled:
+#   path: '/employee/{id}/cancel'
+#   defaults:
+#     _form: '\Drupal\ballistic_employee\Form\ConfirmDeleteForm'
+#     _title: 'Cancel'
+#   requirements:
+#     _permission: 'administer site configuration'
+#     id: ^\d+$
+
+# ballistic_employee_delete:
+#   path: '/user/{uid}/delete/{feature}/{id}'
+#   defaults:
+#     _form: '\Drupal\ballistic_employee\Form\EmployeeDetails'
+#     _title: 'Delete Record'
+#   requirements:
+#      _custom_access: '\Drupal\ballistic_employee\Controller\EmployeeController::access'
+    #  uid: '[0-9]+'
+    #  id: '[0-9]+'
+
+# ballistic_employee.delete:
+#   path: '/ballistic_employee/{id}/delete/'
+#   defaults:
+#     _form: '\Drupal\ballistic_employee\Form\BallisticEmployeeConfirmDeleteForm'
+#     _title: 'DeleteForm'
+#   requirements:
+#     _permission: 'administer site configuration'
+#     id: ^\d+$
+
+# ballistic_employee.routing.yml
+
+# ballistic_employee.delete_form:
+#   path: '/employee-list/{id}/delete'
+#   defaults:
+#     _form: '\Drupal\ballistic_employee\Form\EmployeeDeleteForm'
+#     _title: 'Delete Employee'
+#   requirements:
+#     _permission: 'administer site configuration'
+
+# ballistic_employee.employee_delete_form:
+#   path: '/employee-list/{id}/delete'
+#   defaults:
+#     _form: '\Drupal\ballistic_employee\Form\EmployeeDeleteForm'
+#     _title: 'Delete Employee'
+#   requirements:
+#     _permission: 'administer site configuration'
+
+
+
+ballistic_employee.employee_delete_form:
+  path: '/employee-list/{id}/delete'
+  defaults:
+    _form: '\Drupal\ballistic_employee\Form\EmployeeDeleteForm'
+    _title: 'Delete Employee'
+  requirements:
+    _permission: 'administer site configuration'
+
+
+ballistic_employee.cancelled:
+  path: '/ballistic_employee/{id}/cancelled/'
+  defaults:
+    _form: '\Drupal\ballistic_employee\Form\BallisticEmployeeConfirmDeleteForm'
+    _title: 'DeleteForm'
+  requirements:
+    _permission: 'administer site configuration'
+    id: ^\d+$
+
+ballistic_employee.employee_edit_form:
+  path: '/employee-list/{id}/edit'
+  defaults:
+    _form: '\Drupal\ballistic_employee\Form\EmployeeEditForm'
+    _title: 'Edit Employee'
+  requirements:
+    _permission: 'administer site configuration'
+    id: ^\d+$
+

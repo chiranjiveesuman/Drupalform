@@ -1,0 +1,17 @@
+# Define route for Payment Advice Form
+pcda.payment_advice.form:
+  path: "/get-payment-advice-details"
+  defaults:
+    _form: '\Drupal\pcda\Form\PcdaForm'
+    _title: "Payment Advice Form"
+  requirements:
+    _permission: "access content"
+
+# Define route for Payment Advice List
+pcda.getPaymentAdviceList:
+  path: "/payment-advice-list"
+  defaults:
+    _controller: '\Drupal\pcda\Controller\PcdaController::getPaymentAdviceList'
+    _title: "Payment Advice List"
+  requirements:
+    _permission: "access content"

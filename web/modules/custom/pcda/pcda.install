@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function pcda_schema() {
+    $schema['pcda_form'] = [
+        'description' => 'Contains payment advice details for users.',
+        'fields' => [
+            'id' => [
+                'description' => 'Primary key: unique ID.',
+                'type' => 'serial',
+                'not null' => true,
+            ],
+            'bill_id' => [
+                'description' => 'Unique Bill ID.',
+                'type' => 'varchar',
+                'length' => 50,
+                'not null' => true,
+            ],
+            'pan_number' => [
+                'description' => 'User PAN number.',
+                'type' => 'varchar',
+                'length' => 10,
+                'not null' => true,
+            ],
+            'claimed_amount' => [
+                'description' => 'Claimed amount.',
+                'type' => 'numeric', 
+                'precision' => 10,
+                'scale' => 2,
+                'not null' => true,
+            ],
+            'passed_or_rejection' => [
+                'description' => 'Passed amount or rejection reason.',
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => false,
+            ],
+            'date_created' => [
+                'description' => 'Date the record was created.',
+                'type' => 'int',
+                'not null' => true,
+            ],
+        ],
+        'primary key' => ['id'],
+    ];
+    return $schema;
+}
+
