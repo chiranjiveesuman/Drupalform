@@ -77,26 +77,58 @@ class PcdaForm extends FormBase {
     /**
      * {@inheritdoc}
      */
+    
+
     public function submitForm(array &$form, FormStateInterface $form_state) {
-        $values = $form_state->getValues();
+    $values = $form_state->getValues();
 
-        // Save the data into the database.
-        \Drupal::database()->insert('pcda_form')->fields([
-            'bill_id' => $values['bill_id'],
-            'pan_number' => $values['pan_number'],
-            'claimed_amount' => $values['claimed_amount'],
-            'passed_or_rejection' => $values['passed_or_rejection'],
-            'date_created' => time(),
-        ])->execute();
+    // Save the data into the database.
+    \Drupal::database()->insert('pcda_form')->fields([
+        'bill_id' => $values['bill_id'],
+        'pan_number' => $values['pan_number'],
+        'claimed_amount' => $values['claimed_amount'],
+        'passed_or_rejection' => $values['passed_or_rejection'],
+        'date_created' => time(),
+    ])->execute();
 
-        \Drupal::messenger()->addMessage($this->t('The payment advice details have been saved successfully.'));
+    \Drupal::messenger()->addMessage($this->t('The payment advice details have been saved successfully.'));
 
-        // Handle file download (improve or customize as needed).
-        $file_path = '/path/to/your/files/' . $values['bill_id'] . '.pdf'; 
-        if (file_exists($file_path)) {
-            \Drupal::service('file_system')->read($file_path); // Ensure secure handling.
-        } else {
-            \Drupal::messenger()->addError($this->t('Payment advice not found for Bill ID: @bill_id.', ['@bill_id' => $values['bill_id']]));
-        }
+    // Generate the PDF.
+    $html = $this->buildPdfContent($values);
+    $this->generatePdf($html, $values['bill_id']);
+
+     $form_state->setRedirect('<current>');
+    }
+
+    /**
+     * Build the HTML content for the PDF.
+     */
+    private function buildPdfContent(array $values) {
+        return '
+            <h1>Payment Advice</h1>
+            <p><strong>Bill ID:</strong> ' . $values['bill_id'] . '</p>
+            <p><strong>PAN Number:</strong> ' . $values['pan_number'] . '</p>
+            <p><strong>Claimed Amount:</strong> ' . $values['claimed_amount'] . '</p>
+            <p><strong>Passed Amount / Rejection Reason:</strong> ' . $values['passed_or_rejection'] . '</p>
+            <p><strong>Date Created:</strong> ' . date('Y-m-d H:i:s', time()) . '</p>
+        ';
+    }
+
+    /**
+     * Generate a PDF and trigger download.
+     */
+    private function generatePdf($html, $file_name) {
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Output the PDF to the browser for download.
+        $dompdf->stream($file_name . '.pdf', ['Attachment' => true]);
+        exit;
     }
 }
