@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Drupal\captcha\CaptchaPointInterface;
 
 class PcdaForm extends FormBase {
 
@@ -49,6 +50,11 @@ class PcdaForm extends FormBase {
             '#description' => $this->t('Enter the passed amount if approved, or rejection reason if not approved.'),
         ];
 
+        $form['captcha'] = [
+            '#type' => 'captcha',
+            '#captcha_type' => 'default',
+        ];
+
         $form['submit'] = [
             '#type' => 'submit',
             '#value' => $this->t('Download Payment Advice'),
@@ -80,24 +86,25 @@ class PcdaForm extends FormBase {
     
 
     public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state->getValues();
+        $values = $form_state->getValues();
 
-    // Save the data into the database.
-    \Drupal::database()->insert('pcda_form')->fields([
-        'bill_id' => $values['bill_id'],
-        'pan_number' => $values['pan_number'],
-        'claimed_amount' => $values['claimed_amount'],
-        'passed_or_rejection' => $values['passed_or_rejection'],
-        'date_created' => time(),
-    ])->execute();
+        // Save the data into the database.
+        \Drupal::database()->insert('pcda_form')->fields([
+            'bill_id' => $values['bill_id'],
+            'pan_number' => $values['pan_number'],
+            'claimed_amount' => $values['claimed_amount'],
+            'passed_or_rejection' => $values['passed_or_rejection'],
+            'date_created' => time(),
+        ])->execute();
 
-    \Drupal::messenger()->addMessage($this->t('The payment advice details have been saved successfully.'));
+        \Drupal::messenger()->addMessage($this->t('The payment advice details have been saved successfully.'));
 
-    // Generate the PDF.
-    $html = $this->buildPdfContent($values);
-    $this->generatePdf($html, $values['bill_id']);
+        // Generate the PDF.
+        $html = $this->buildPdfContent($values);
+        $this->generatePdf($html, $values['bill_id']);
 
-     $form_state->setRedirect('<current>');
+        // Redirect to the form page to refresh the form.
+        $form_state->setRedirect('pcda.payment_advice.form');
     }
 
     /**

@@ -6,12 +6,11 @@ pcda.payment_advice.form:
     _title: "Payment Advice Form"
   requirements:
     _permission: "access content"
-
 # Define route for Payment Advice List
-pcda.getPaymentAdviceList:
-  path: "/payment-advice-list"
-  defaults:
-    _controller: '\Drupal\pcda\Controller\PcdaController::getPaymentAdviceList'
-    _title: "Payment Advice List"
-  requirements:
-    _permission: "access content"
+# pcda.getPaymentAdviceList:
+#   path: "/payment-advice-list"
+#   defaults:
+#     _controller: '\Drupal\pcda\Controller\PcdaController::getPaymentAdviceList'
+#     _title: "Payment Advice List"
+#   requirements:
+#     _permission: "access content"

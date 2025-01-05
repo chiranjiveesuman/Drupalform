@@ -3,5 +3,6 @@ type: module
 description: Custom form for PAN and claimed amount submission.
 core_version_requirement: ^10
 package: Custom
-# dependencies:
-#   - captcha:captcha
+dependencies:
+  - captcha:captcha
+  - recaptcha:recaptcha
