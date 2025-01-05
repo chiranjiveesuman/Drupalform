@@ -78,6 +78,19 @@ class PcdaForm extends FormBase {
         if (!is_numeric($form_state->getValue('claimed_amount')) || $form_state->getValue('claimed_amount') <= 0) {
             $form_state->setErrorByName('claimed_amount', $this->t('Claimed amount must be a positive number.'));
         }
+
+        // Validate that Claimed Amount is greater than or equal to Passed Amount
+        $claimed_amount = $form_state->getValue('claimed_amount');
+        $passed_amount = $form_state->getValue('passed_or_rejection');
+
+        // If passed_or_rejection contains a numeric value (not a rejection reason)
+        if (is_numeric($passed_amount) && $claimed_amount < $passed_amount) {
+            $form_state->setErrorByName('claimed_amount', $this->t('Claimed amount must be greater than or equal to Passed Amount.'));
+        }
+        // If passed_or_rejection contains a rejection reason (not a numeric value)
+        elseif (!is_numeric($passed_amount)) {
+            $form_state->setErrorByName('passed_or_rejection', $this->t('Please enter a valid passed amount or rejection reason.'));
+        }
     }
 
     /**
@@ -103,7 +116,13 @@ class PcdaForm extends FormBase {
         $html = $this->buildPdfContent($values);
         $this->generatePdf($html, $values['bill_id']);
 
-        // Redirect to the form page to refresh the form.
+        // Clear specific fields after form submission
+        $form_state->setValue('bill_id', '');  // Clear Bill ID
+        $form_state->setValue('pan_number', '');  // Clear PAN Number
+        $form_state->setValue('claimed_amount', '');  // Clear Claimed Amount
+        $form_state->setValue('passed_or_rejection', '');
+
+        // After PDF generation, redirect to the default page (home page).
         $form_state->setRedirect('pcda.payment_advice.form');
     }
 
@@ -136,6 +155,5 @@ class PcdaForm extends FormBase {
 
         // Output the PDF to the browser for download.
         $dompdf->stream($file_name . '.pdf', ['Attachment' => true]);
-        exit;
     }
 }

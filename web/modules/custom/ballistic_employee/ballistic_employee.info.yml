@@ -1,6 +1,0 @@
-name: Employee Form
-description: Gets employee details. Looks clean in Claro 10.0.0 (default theme, administration theme).
-type: module
-core_version_requirement: ^9 | ^10
-package: Custom
-version: '1.0'
